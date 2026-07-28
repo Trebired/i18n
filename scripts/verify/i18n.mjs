@@ -17,6 +17,8 @@ const {
 } = runtime;
 const {
   checkColocatedI18n,
+  flattenMessageKeys,
+  parseMessagesSource,
 } = checker;
 
 async function main() {
@@ -24,6 +26,7 @@ async function main() {
   await verifyRuntimeEntryIsBrowserSafe();
   verifyRootRuntimeExports();
   verifyTranslationRuntime();
+  verifyMessagesParser();
   await verifyCheckerSuccess();
   await verifyCheckerFailures();
   await verifyBuiltCliExecutable();
@@ -78,6 +81,31 @@ function verifyTranslationRuntime() {
 
   const t = createTranslator(bundle, "en");
   assert.equal(t("nested.title", { name: "Ada" }), "Title Ada");
+}
+
+function verifyMessagesParser() {
+  const messages = parseMessagesSource([
+    `import { defineMessages } from ${JSON.stringify(packageImport)};`,
+    "export default defineMessages({",
+    "  description:",
+    "    'first part ' +",
+    "    /* keep comments harmless */",
+    "    (`second part ` + `third part`),",
+    "  nested: { title: `Title` },",
+    "});",
+    "",
+  ].join("\n"), "parser-success.ts");
+
+  assert.equal(messages.description, "first part second part third part");
+  assert.deepEqual(flattenMessageKeys(messages), ["description", "nested.title"]);
+  assert.throws(
+    () => parseMessagesSource("export default defineMessages({ title: title });", "dynamic.ts"),
+    /unsupported static expression: Identifier/u,
+  );
+  assert.throws(
+    () => parseMessagesSource("export default defineMessages({ title: `Hi ${name}` });", "template.ts"),
+    /template expressions are not supported/u,
+  );
 }
 
 async function verifyCheckerSuccess() {

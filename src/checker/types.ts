@@ -9,9 +9,11 @@ type I18nCheckViolationCode =
 
 type I18nCheckViolation = {
   code: I18nCheckViolationCode;
+  column?: number;
   filePath?: string;
   folderPath: string;
   language?: string;
+  line?: number;
   message: string;
 };
 

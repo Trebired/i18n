@@ -7,6 +7,10 @@ export {
   normalizeLanguage,
 } from "./options.js";
 export {
+  flattenMessageKeys,
+} from "./keys.js";
+export {
+  I18nMessageParseError,
   parseMessagesFile,
   parseMessagesSource,
 } from "./parser.js";

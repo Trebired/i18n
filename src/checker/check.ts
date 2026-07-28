@@ -50,7 +50,7 @@ function formatI18nCheckViolations(violations: I18nCheckViolation[], rootDir = p
   const lines = ["I18n check failed:"];
   for (const violation of violations) {
     const folder = toRelative(rootDir, violation.folderPath);
-    const file = violation.filePath ? ` :: ${toRelative(rootDir, violation.filePath)}` : "";
+    const file = violation.filePath ? ` :: ${formatFileLocation(violation, rootDir)}` : "";
     lines.push(`- ${violation.code} :: ${folder}${file} :: ${violation.message}`);
   }
   return lines.join("\n");
@@ -140,7 +140,7 @@ async function loadLanguages(
         language,
       });
     } catch (error) {
-      violations.push(createViolation("i18n-invalid-default-export", folderPath, filePath, formatError(error)));
+      violations.push(createViolation("i18n-invalid-default-export", folderPath, filePath, formatError(error), getErrorLocation(error)));
     }
   }
   return loaded;
@@ -176,8 +176,9 @@ function createViolation(
   folderPath: string,
   filePath: string | undefined,
   message: string,
+  location?: Pick<I18nCheckViolation, "column" | "line">,
 ): I18nCheckViolation {
-  return { code, filePath, folderPath, message };
+  return { code, filePath, folderPath, message, ...location };
 }
 
 function formatKeyMismatch(language: string, comparison: { extra: string[]; missing: string[] }): string {
@@ -189,7 +190,26 @@ function formatKeyMismatch(language: string, comparison: { extra: string[]; miss
 }
 
 function formatError(error: unknown): string {
+  if (isParseError(error)) return error.reason;
   return error instanceof Error ? error.message : String(error);
+}
+
+function getErrorLocation(error: unknown): Pick<I18nCheckViolation, "column" | "line"> | undefined {
+  return isParseError(error) ? { column: error.column, line: error.line } : undefined;
+}
+
+function isParseError(error: unknown): error is { column: number; line: number; reason: string } {
+  if (!error || typeof error !== "object") return false;
+  const candidate = error as Record<string, unknown>;
+  return typeof candidate.column === "number"
+    && typeof candidate.line === "number"
+    && typeof candidate.reason === "string";
+}
+
+function formatFileLocation(violation: I18nCheckViolation, rootDir: string): string {
+  const filePath = toRelative(rootDir, violation.filePath || "");
+  if (!violation.line || !violation.column) return filePath;
+  return `${filePath}:${violation.line}:${violation.column}`;
 }
 
 function toRelative(rootDir: string, filePath: string): string {

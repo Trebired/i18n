@@ -64,7 +64,10 @@ Language files are pure TypeScript default exports:
 import { defineMessages } from "@trebired/i18n";
 
 export default defineMessages({
-  title: "Title",
+  description:
+    "First part " +
+    "second part",
+  title: `Title`,
 });
 ```
 
@@ -99,13 +102,33 @@ await assertColocatedI18n({
 });
 ```
 
+Parser helpers are also exposed from the checker subpath:
+
+```ts
+import {
+  checkColocatedI18n,
+  flattenMessageKeys,
+  formatI18nCheckViolations,
+  parseMessagesFile,
+  parseMessagesSource,
+} from "@trebired/i18n/checker";
+```
+
 The checker fails when:
 
 - a supported language file is missing from any discovered `i18n/` folder
 - a file in an `i18n/` folder is not one of the supported language files
 - languages do not expose the same flattened keys as English
 - a language file does not default-export `defineMessages({ ... })`
-- message values are not strings or nested message objects
+- message values are not static strings or nested message objects
+
+Accepted message values are string literals, no-substitution template literals, parenthesized static strings, and static string concatenation:
+
+```ts
+"first " + "second" + `third`
+```
+
+Dynamic expressions, identifiers, function calls, member expressions, arrays, template expressions with `${...}`, and variables referenced from messages are rejected.
 
 When `supportedLanguages` is omitted, the checker infers languages from each folder but still requires the English fallback file.
 
