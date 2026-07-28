@@ -9,6 +9,7 @@
   "#e11c6npizd56": "./src/checker/index.ts",
   "#ewafb7crrkk6": "./scripts/verify/i18n.mjs",
   "#ix9o2wi3zacr": "./examples/dummy.ts",
+  "#q53b0pmj10xk": "./scripts/verify/pack.mjs",
   "#wg12plb9o936": "./src/cli.ts",
   "#wil8lhq19f5q": "./src/checker/options.ts",
   "#yznjpd3uk30u": "./src/checker/parser.ts",

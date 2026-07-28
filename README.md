@@ -4,6 +4,8 @@ Generic translation primitives and colocated TypeScript i18n checks for reusable
 
 `@trebired/i18n` does not own a global dictionary, generated registry, JSON loader, framework adapter, or app language policy. Callers provide bundles directly, or pair the source-level `createLocalTranslator(import.meta.url, lang)` API with bundler support that rewrites it to static local imports.
 
+The root entrypoint is runtime-only and browser-safe. Checker APIs live under `@trebired/i18n/checker`, and the CLI is exposed through the `trebired-i18n` bin.
+
 ## Install
 
 Runtime support: Bun 1+ and Node.js 18+.
@@ -89,7 +91,7 @@ translate(bundle, "cs-CZ", "form.title", { count: 3 });
 Run the checker over a source tree with colocated `i18n/` folders:
 
 ```ts
-import { assertColocatedI18n } from "@trebired/i18n";
+import { assertColocatedI18n } from "@trebired/i18n/checker";
 
 await assertColocatedI18n({
   rootDir: "./src",

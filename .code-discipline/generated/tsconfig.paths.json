@@ -31,6 +31,9 @@
       "#ix9o2wi3zacr": [
         "../../examples/dummy.ts"
       ],
+      "#q53b0pmj10xk": [
+        "../../scripts/verify/pack.mjs"
+      ],
       "#wg12plb9o936": [
         "../../src/cli.ts"
       ],
