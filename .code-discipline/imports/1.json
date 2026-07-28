@@ -1,0 +1,16 @@
+{
+  "#39b91hm3o1w5": "./src/checker/check.ts",
+  "#53cx0fxlre43": "./src/checker/types.ts",
+  "#6fj3uym6hq15": "./src/checker/scan.ts",
+  "#6qu56edczmq6": "./src/index.ts",
+  "#80az46plftad": "./src/checker/keys.ts",
+  "#cpwm44bgpa8w": "./scripts/prepare-dist.mjs",
+  "#dtqts236bejn": "./src/types.ts",
+  "#e11c6npizd56": "./src/checker/index.ts",
+  "#ewafb7crrkk6": "./scripts/verify/i18n.mjs",
+  "#ix9o2wi3zacr": "./examples/dummy.ts",
+  "#wg12plb9o936": "./src/cli.ts",
+  "#wil8lhq19f5q": "./src/checker/options.ts",
+  "#yznjpd3uk30u": "./src/checker/parser.ts",
+  "#z83gee47f6ko": "./src/translation.ts"
+}

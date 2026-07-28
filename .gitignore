@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+coverage/
+
+# Package artifacts
+*.tgz
+
+# Runtime and generated work files
+.tmp/
+
+# Local environment
+.env
+.env.*
+!.env.example
