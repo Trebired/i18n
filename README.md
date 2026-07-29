@@ -73,7 +73,9 @@ export default defineMessages({
 
 There is no local `i18n/index.ts`, JSON file, app-wide registry, or checked-in generated source file.
 
-## Translation Rules
+## Concepts
+
+### Translation Rules
 
 - exact flat keys are checked first
 - nested dot keys are checked next
@@ -89,7 +91,7 @@ import { translate } from "@trebired/i18n";
 translate(bundle, "cs-CZ", "form.title", { count: 3 });
 ```
 
-## Checker API
+### Checker API
 
 Run the checker over a source tree with colocated `i18n/` folders:
 
@@ -132,7 +134,18 @@ Dynamic expressions, identifiers, function calls, member expressions, arrays, te
 
 When `supportedLanguages` is omitted, the checker infers languages from each folder but still requires the English fallback file.
 
+## Public API
+
+The package exposes the documented runtime functions, constants, and types through its package entrypoints.
+
+Entrypoints:
+
+- `@trebired/i18n`
+- `@trebired/i18n/checker`
+
 ## CLI
+
+### Command Reference
 
 ```sh
 trebired-i18n check --root ./src --languages en,cs
@@ -148,3 +161,15 @@ Useful options:
 - `--ignore-dir generated`
 
 The CLI prints every violation before exiting with status 1.
+
+## What It Does Not Do
+
+This package does not:
+
+- create a global registry
+- load JSON dictionaries
+- own application language policy or UI language selection
+
+## License
+
+Licensed under MIT. See [LICENSE](./LICENSE).
