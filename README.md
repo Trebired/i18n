@@ -169,7 +169,3 @@ This package does not:
 - create a global registry
 - load JSON dictionaries
 - own application language policy or UI language selection
-
-## License
-
-Licensed under MIT. See [LICENSE](./LICENSE).
