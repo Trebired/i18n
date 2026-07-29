@@ -10,6 +10,7 @@ This project follows semantic versioning once published.
 - Added support for static string expressions in `defineMessages()` files, including plain literals, no-substitution template literals, parenthesized expressions, and string concatenation across whitespace or comments.
 - Kept dynamic message expressions rejected with clearer file, line, column, and reason diagnostics.
 - Exported `flattenMessageKeys()` from `@trebired/i18n/checker` for tools that need checker-owned key normalization.
+- Prepared Code Discipline generated path metadata before typecheck/build scripts so fresh checkouts work with generated files ignored.
 
 ## 0.2.0
 
