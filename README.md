@@ -8,10 +8,10 @@ The root entrypoint is runtime-only and browser-safe. Checker APIs live under `@
 
 ## Install
 
-Runtime support: Bun 1+ and Node.js 18+.
+Runtime support: Bun 1+.
 
 ```sh
-npm install @trebired/i18n
+bun i @trebired/i18n
 ```
 
 ## Quick Start
