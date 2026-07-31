@@ -1,6 +1,6 @@
 {
   "name": "@trebired/i18n",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Generic colocated TypeScript i18n primitives and checker for Trebired packages and applications.",
   "type": "module",
   "private": false,
