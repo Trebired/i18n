@@ -4,6 +4,11 @@ All notable changes to `@trebired/i18n` will be documented here.
 
 This project follows semantic versioning once published.
 
+## 0.3.1
+
+- Standardized package metadata (author field, config-driven organization name, dropped the Node engine constraint) and migrated `.code-discipline/config.ts` to `defineCodeDisciplineConfig`.
+- Normalized README structure and removed the license footer.
+
 ## 0.3.0
 
 - Moved colocated message-file parsing onto the checker API as the package-owned source of truth for static TypeScript message files.
