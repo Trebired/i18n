@@ -4,6 +4,11 @@ All notable changes to `@trebired/i18n` will be documented here.
 
 This project follows semantic versioning once published.
 
+## 0.4.0
+
+- Updated Code Discipline configuration to the `imports` rule with dead import removal enabled.
+- Prepared the i18n package release line for consumers using the current Code Discipline imports gate.
+
 ## 0.3.1
 
 - Standardized package metadata (author field, config-driven organization name, dropped the Node engine constraint) and migrated `.code-discipline/config.ts` to `defineCodeDisciplineConfig`.
