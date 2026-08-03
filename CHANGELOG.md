@@ -4,6 +4,10 @@ All notable changes to `@trebired/i18n` will be documented here.
 
 This project follows semantic versioning once published.
 
+## 0.4.2
+
+- Refreshed package dependency ranges with `bun update` after adopting the `.trebired/code-discipline` structure.
+
 ## 0.4.1
 
 - Moved Code Discipline config, alias-map state, generated tsconfig paths, and reports to `.trebired/code-discipline/`.
