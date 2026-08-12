@@ -3,10 +3,10 @@ import {
   defineMessages,
 } from "#6qu56edczmq6";
 
-const t = createTranslator({
-  en: defineMessages({
-    title: "Example {name}",
-  }),
-}, "en");
+const translator = createTranslator({
+    en: defineMessages({
+        title: "Example {name}",
+    }),
+  }, "en");
 
-console.log(t("title", { name: "i18n" }));
+console.log(translator("title", { name: "i18n" }));

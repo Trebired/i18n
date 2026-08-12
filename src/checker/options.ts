@@ -1,5 +1,6 @@
 import path from "node:path";
 
+import { normalizeLanguage } from "#aiqqoxin3urs";
 import type { I18nCheckOptions, NormalizedI18nCheckOptions } from "./types.js";
 
 const DEFAULT_DIR_NAME = "i18n";
@@ -36,25 +37,21 @@ function normalizeSupportedLanguages(
 function normalizeExtensions(value: string | string[] | undefined): string[] {
   const values = Array.isArray(value) ? value : value ? [value] : [DEFAULT_EXTENSION];
   return Array.from(new Set(values.map((item) => {
-    const normalized = normalizeSegment(item);
-    return normalized ? normalized.startsWith(".") ? normalized : `.${normalized}` : "";
-  }).filter(Boolean)));
+          const normalized = normalizeSegment(item);
+          return normalized ? normalized.startsWith(".") ? normalized : `.${normalized}` : "";
+      }).filter(Boolean)));
 }
 
 function normalizeDirs(value: string | string[] | undefined, rootDir: string): string[] {
   const values = Array.isArray(value) ? value : value ? [value] : [];
   return values
-    .map((item) => String(item || "").trim())
-    .filter(Boolean)
-    .map((item) => path.isAbsolute(item) ? item : path.resolve(rootDir, item));
+  .map((item) => String(item || "").trim())
+  .filter(Boolean)
+  .map((item) => path.isAbsolute(item) ? item : path.resolve(rootDir, item));
 }
 
 function normalizeSegment(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
-}
-
-function normalizeLanguage(value: unknown): string {
-  return typeof value === "string" ? value.trim().toLowerCase().replace(/_/gu, "-") : "";
 }
 
 export {

@@ -4,6 +4,19 @@ All notable changes to `@trebired/i18n` will be documented here.
 
 This project follows semantic versioning once published.
 
+## 0.4.5
+
+- Updated the Code Discipline devDependency and lockfile to public `@trebired/code-discipline@^5.5.2`.
+## 0.4.4
+
+- Adopted the shared Trebired Code Discipline preset so package configs only keep repo-specific policy.
+- Updated the Code Discipline devDependency and lockfile to public `@trebired/code-discipline@^5.5.1`.
+
+## 0.4.3
+
+- Updated the package Code Discipline config to the platform-aligned rule set, including formatting, redundant path segment cleanup, removable comment checks, structural blank lines, and dry checks.
+- Updated the Code Discipline devDependency and lockfile to the current public `@trebired/code-discipline@^5.3.0`.
+
 ## 0.4.2
 
 - Refreshed package dependency ranges with `bun update` after adopting the `.trebired/code-discipline` structure.

@@ -75,7 +75,7 @@ async function checkI18nFolder(
 async function readFolderEntries(
   folderPath: string,
   violations: I18nCheckViolation[],
-): Promise<import("node:fs").Dirent[] | null> {
+): Promise<import("node:fs").Dirent[]|null> {
   try {
     return await fs.readdir(folderPath, { withFileTypes: true });
   } catch {
@@ -135,9 +135,9 @@ async function loadLanguages(
     if (!filePath) continue;
     try {
       loaded.push({
-        filePath,
-        keys: flattenMessageKeys(await parseMessagesFile(filePath)),
-        language,
+          filePath,
+          keys: flattenMessageKeys(await parseMessagesFile(filePath)),
+          language,
       });
     } catch (error) {
       violations.push(createViolation("i18n-invalid-default-export", folderPath, filePath, formatError(error), getErrorLocation(error)));
@@ -176,7 +176,7 @@ function createViolation(
   folderPath: string,
   filePath: string | undefined,
   message: string,
-  location?: Pick<I18nCheckViolation, "column" | "line">,
+  location?: Pick<I18nCheckViolation, "column"|"line">,
 ): I18nCheckViolation {
   return { code, filePath, folderPath, message, ...location };
 }
@@ -194,7 +194,7 @@ function formatError(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
-function getErrorLocation(error: unknown): Pick<I18nCheckViolation, "column" | "line"> | undefined {
+function getErrorLocation(error: unknown): Pick<I18nCheckViolation, "column"|"line">|undefined {
   return isParseError(error) ? { column: error.column, line: error.line } : undefined;
 }
 
@@ -202,8 +202,8 @@ function isParseError(error: unknown): error is { column: number; line: number; 
   if (!error || typeof error !== "object") return false;
   const candidate = error as Record<string, unknown>;
   return typeof candidate.column === "number"
-    && typeof candidate.line === "number"
-    && typeof candidate.reason === "string";
+  &&typeof candidate.line === "number"
+  &&typeof candidate.reason === "string";
 }
 
 function formatFileLocation(violation: I18nCheckViolation, rootDir: string): string {

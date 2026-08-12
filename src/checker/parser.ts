@@ -46,8 +46,8 @@ function parseMessagesSource(source: string, filePath = "messages.ts"): I18nDict
 }
 
 function assertParsableSource(sourceFile: ts.SourceFile, filePath: string): void {
-  const diagnostics = (sourceFile as ts.SourceFile & {
-    parseDiagnostics?: readonly ts.Diagnostic[];
+  const diagnostics = (sourceFile as ts.SourceFile& {
+      parseDiagnostics?: readonly ts.Diagnostic[];
   }).parseDiagnostics || [];
   const [diagnostic] = diagnostics;
   if (!diagnostic) return;
@@ -91,7 +91,7 @@ function parseMessagesObject(
     failAtNode(sourceFile, filePath, expression, "expected messages object literal");
   }
 
-  const messages: Record<string, string | I18nDictionary> = {};
+  const messages: Record<string, string|I18nDictionary> = {};
   for (const property of expression.properties) {
     if (!ts.isPropertyAssignment(property)) {
       failAtNode(sourceFile, filePath, property, "message objects only support property assignments");
@@ -155,10 +155,10 @@ function failAtNode(sourceFile: ts.SourceFile, filePath: string, node: ts.Node, 
 function failAtPosition(sourceFile: ts.SourceFile, filePath: string, position: number, reason: string): never {
   const location = sourceFile.getLineAndCharacterOfPosition(position);
   throw new I18nMessageParseError({
-    column: location.character + 1,
-    filePath,
-    line: location.line + 1,
-    reason,
+      column: location.character + 1,
+      filePath,
+      line: location.line + 1,
+      reason,
   });
 }
 

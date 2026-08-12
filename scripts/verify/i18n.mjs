@@ -60,16 +60,16 @@ function verifyRootRuntimeExports() {
 function verifyTranslationRuntime() {
   const bundle = {
     en: defineMessages({
-      flat: "Flat {name}",
-      nested: {
-        title: "Title {{ name }}",
-      },
-      "status.saved": "Saved",
+        flat: "Flat {name}",
+        nested: {
+          title: "Title {{ name }}",
+        },
+        "status.saved": "Saved",
     }),
     cs: defineMessages({
-      flat: "Plocha {name}",
-      nested: {},
-      "status.saved": "Ulozeno",
+        flat: "Plocha {name}",
+        nested: {},
+        "status.saved": "Ulozeno",
     }),
   };
 
@@ -79,22 +79,22 @@ function verifyTranslationRuntime() {
   assert.equal(translate(bundle, "fr", "flat", { name: "Ada" }), "Flat Ada");
   assert.equal(translate(bundle, "cs", "missing.key"), "missing.key");
 
-  const t = createTranslator(bundle, "en");
-  assert.equal(t("nested.title", { name: "Ada" }), "Title Ada");
+  const translator = createTranslator(bundle, "en");
+  assert.equal(translator("nested.title", { name: "Ada" }), "Title Ada");
 }
 
 function verifyMessagesParser() {
   const messages = parseMessagesSource([
-    `import { defineMessages } from ${JSON.stringify(packageImport)};`,
-    "export default defineMessages({",
-    "  description:",
-    "    'first part ' +",
-    "    /* keep comments harmless */",
-    "    (`second part ` + `third part`),",
-    "  nested: { title: `Title` },",
-    "});",
-    "",
-  ].join("\n"), "parser-success.ts");
+      `import { defineMessages } from ${JSON.stringify(packageImport)};`,
+      "export default defineMessages({",
+      "  description:",
+      "    'first part ' +",
+      "    /* keep comments harmless */",
+      "    (`second part ` + `third part`),",
+      "  nested: { title: `Title` },",
+      "});",
+      "",
+    ].join("\n"), "parser-success.ts");
 
   assert.equal(messages.description, "first part second part third part");
   assert.deepEqual(flattenMessageKeys(messages), ["description", "nested.title"]);
@@ -111,54 +111,54 @@ function verifyMessagesParser() {
 async function verifyCheckerSuccess() {
   const featureDir = path.join(tempRoot, "success", "feature", "i18n");
   await writeLanguageFile(featureDir, "en", {
-    nested: { title: "Title" },
-    "status.saved": "Saved",
+      nested: { title: "Title" },
+      "status.saved": "Saved",
   });
   await writeLanguageFile(featureDir, "cs", {
-    nested: { title: "Titulek" },
-    "status.saved": "Ulozeno",
+      nested: { title: "Titulek" },
+      "status.saved": "Ulozeno",
   });
 
   const result = await checkColocatedI18n({
-    rootDir: path.join(tempRoot, "success"),
-    supportedLanguages: ["en", "cs"],
+      rootDir: path.join(tempRoot, "success"),
+      supportedLanguages: ["en", "cs"],
   });
   assert.equal(result.ok, true);
   assert.equal(result.checkedFolders, 1);
 }
 
 async function verifyCheckerFailures() {
-  await assertCheckerFails("missing", async (dir) => {
-    await writeLanguageFile(path.join(dir, "feature", "i18n"), "en", { title: "Title" });
-  }, "i18n-missing-language-file");
+  await assertCheckerFails("missing", async(dir) => {
+      await writeLanguageFile(path.join(dir, "feature", "i18n"), "en", { title: "Title" });
+    }, "i18n-missing-language-file");
 
-  await assertCheckerFails("unsupported", async (dir) => {
-    const folder = path.join(dir, "feature", "i18n");
-    await writeLanguageFile(folder, "en", { title: "Title" });
-    await writeLanguageFile(folder, "cs", { title: "Titulek" });
-    await writeLanguageFile(folder, "fr", { title: "Titre" });
-  }, "i18n-unsupported-language-file");
+  await assertCheckerFails("unsupported", async(dir) => {
+      const folder = path.join(dir, "feature", "i18n");
+      await writeLanguageFile(folder, "en", { title: "Title" });
+      await writeLanguageFile(folder, "cs", { title: "Titulek" });
+      await writeLanguageFile(folder, "fr", { title: "Titre" });
+    }, "i18n-unsupported-language-file");
 
-  await assertCheckerFails("mismatch", async (dir) => {
-    const folder = path.join(dir, "feature", "i18n");
-    await writeLanguageFile(folder, "en", { title: "Title", action: "Save" });
-    await writeLanguageFile(folder, "cs", { title: "Titulek" });
-  }, "i18n-key-mismatch");
+  await assertCheckerFails("mismatch", async(dir) => {
+      const folder = path.join(dir, "feature", "i18n");
+      await writeLanguageFile(folder, "en", { title: "Title", action: "Save" });
+      await writeLanguageFile(folder, "cs", { title: "Titulek" });
+    }, "i18n-key-mismatch");
 
-  await assertCheckerFails("invalid", async (dir) => {
-    const folder = path.join(dir, "feature", "i18n");
-    await fs.mkdir(folder, { recursive: true });
-    await fs.writeFile(path.join(folder, "en.ts"), "export default { title: \"Title\" };\n");
-    await writeLanguageFile(folder, "cs", { title: "Titulek" });
-  }, "i18n-invalid-default-export");
+  await assertCheckerFails("invalid", async(dir) => {
+      const folder = path.join(dir, "feature", "i18n");
+      await fs.mkdir(folder, { recursive: true });
+      await fs.writeFile(path.join(folder, "en.ts"), "export default { title: \"Title\" };\n");
+      await writeLanguageFile(folder, "cs", { title: "Titulek" });
+    }, "i18n-invalid-default-export");
 }
 
 async function assertCheckerFails(name, writeFixture, expectedCode) {
   const dir = path.join(tempRoot, name);
   await writeFixture(dir);
   const result = await checkColocatedI18n({
-    rootDir: dir,
-    supportedLanguages: ["en", "cs"],
+      rootDir: dir,
+      supportedLanguages: ["en", "cs"],
   });
   assert.equal(result.ok, false);
   assert.equal(result.violations.some((violation) => violation.code === expectedCode), true);
@@ -171,7 +171,7 @@ async function resetTempRoot() {
 
 async function verifyBuiltCliExecutable() {
   const stats = await fs.stat(path.join(rootDir, "dist", "cli.js"));
-  assert.notEqual(stats.mode & 0o111, 0, "dist/cli.js should be executable");
+  assert.notEqual(stats.mode&0o111, 0, "dist/cli.js should be executable");
 }
 
 function findImportSpecifiers(source) {
@@ -194,11 +194,11 @@ function packageOrganization() {
 async function writeLanguageFile(folder, language, messages) {
   await fs.mkdir(folder, { recursive: true });
   await fs.writeFile(path.join(folder, `${language}.ts`), [
-    `import { defineMessages } from ${JSON.stringify(packageImport)};`,
-    "",
-    `export default defineMessages(${JSON.stringify(messages, null, 2)});`,
-    "",
-  ].join("\n"));
+      `import { defineMessages } from ${JSON.stringify(packageImport)};`,
+      "",
+      `export default defineMessages(${JSON.stringify(messages, null, 2)});`,
+      "",
+    ].join("\n"));
 }
 
 await main();

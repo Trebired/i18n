@@ -74,23 +74,23 @@ function packageOrganization(): string {
 
 function printHelp(): void {
   console.log([
-    `Usage: ${CLI_NAME} check --root ./src --languages en,cs`,
-    "",
-    "Options:",
-    "  --root <dir>",
-    "  --languages <comma-list>",
-    "  --default-language <language>",
-    "  --dir-name <name>",
-    "  --extension <extension>",
-    "  --ignore-dir <name>",
-    "  --dir <i18n-folder>",
-  ].join("\n"));
+      `Usage: ${CLI_NAME} check --root ./src --languages en,cs`,
+      "",
+      "Options:",
+      "  --root <dir>",
+      "  --languages <comma-list>",
+      "  --default-language <language>",
+      "  --dir-name <name>",
+      "  --extension <extension>",
+      "  --ignore-dir <name>",
+      "  --dir <i18n-folder>",
+    ].join("\n"));
 }
 
 if (process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/gu, "/"))) {
-  runCli().catch((error) => {
-    console.error(error instanceof Error ? error.message : String(error));
-    process.exitCode = 1;
+  runCli().catch ((error) => {
+      console.error(error instanceof Error ? error.message : String(error));
+      process.exitCode = 1;
   });
 }
 

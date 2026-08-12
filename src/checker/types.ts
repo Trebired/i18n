@@ -1,11 +1,11 @@
 import type { I18nDictionary } from "#dtqts236bejn";
 
 type I18nCheckViolationCode =
-  | "i18n-folder-missing"
-  | "i18n-invalid-default-export"
-  | "i18n-key-mismatch"
-  | "i18n-missing-language-file"
-  | "i18n-unsupported-language-file";
+|"i18n-folder-missing"
+|"i18n-invalid-default-export"
+|"i18n-key-mismatch"
+|"i18n-missing-language-file"
+|"i18n-unsupported-language-file";
 
 type I18nCheckViolation = {
   code: I18nCheckViolationCode;

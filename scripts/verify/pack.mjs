@@ -31,9 +31,9 @@ async function resetTempRoot() {
 
 function packPackage() {
   const stdout = execFileSync("npm", ["pack", "--json"], {
-    ...createNpmOptions(rootDir),
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "inherit"],
+      ...createNpmOptions(rootDir),
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "inherit"],
   });
   const [entry] = JSON.parse(stdout);
   if (!entry?.filename) throw new Error("npm pack did not return a tarball filename.");
@@ -56,7 +56,7 @@ async function validatePackedBins(packageJson, tarballPath, tarballEntries) {
     assertTarEntryExists(tarballEntries, target, `Missing packed bin target: ${target}`);
     const localPath = path.join(rootDir, target.replace(/^\.\//u, ""));
     const localStats = await fs.stat(localPath);
-    assert.notEqual(localStats.mode & 0o111, 0, `Built bin is not executable: ${target}`);
+    assert.notEqual(localStats.mode&0o111, 0, `Built bin is not executable: ${target}`);
     assertTarEntryExecutable(tarballPath, target);
   }
 }
@@ -91,13 +91,13 @@ function assertTarEntryExecutable(tarballPath, packagePath) {
 
 function listTarEntries(tarballPath) {
   return new Set(execFileSync("tar", ["-tf", tarballPath], {
-    encoding: "utf8",
-  }).split("\n").map((entry) => entry.trim()).filter(Boolean));
+        encoding: "utf8",
+    }).split("\n").map((entry) => entry.trim()).filter(Boolean));
 }
 
 function readPackedPackageJson(tarballPath) {
   return JSON.parse(execFileSync("tar", ["-xOf", tarballPath, "package/package.json"], {
-    encoding: "utf8",
+        encoding: "utf8",
   }));
 }
 

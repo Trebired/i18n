@@ -11,11 +11,11 @@ async function main() {
   await promotePublicDistFiles();
 
   const files = await collectDistFiles(distDir);
-  await Promise.all(files.map(async (filePath) => {
-    const kind = filePath.endsWith(".d.ts") ? "types" : "runtime";
-    const original = await fs.readFile(filePath, "utf8");
-    const rewritten = rewriteAliasImports(original, filePath, aliasTargets, kind);
-    if (rewritten !== original) await fs.writeFile(filePath, rewritten);
+  await Promise.all(files.map(async(filePath) => {
+        const kind = filePath.endsWith(".d.ts") ? "types" : "runtime";
+        const original = await fs.readFile(filePath, "utf8");
+        const rewritten = rewriteAliasImports(original, filePath, aliasTargets, kind);
+        if (rewritten !== original) await fs.writeFile(filePath, rewritten);
   }));
   await chmodExecutableCli();
 }
@@ -68,14 +68,14 @@ async function collectDistFiles(startDir) {
 
 function rewriteAliasImports(source, filePath, aliasTargets, kind) {
   return source.replace(/(["'])(#[^"']+)\1/g, (match, quote, alias) => {
-    const target = aliasTargets[alias];
-    if (!target) return match;
+      const target = aliasTargets[alias];
+      if (!target) return match;
 
-    const compiledPath = resolveCompiledTarget(target, kind);
-    if (!compiledPath) return match;
+      const compiledPath = resolveCompiledTarget(target, kind);
+      if (!compiledPath) return match;
 
-    const relativePath = toRelativeImport(path.relative(path.dirname(filePath), compiledPath));
-    return `${quote}${relativePath}${quote}`;
+      const relativePath = toRelativeImport(path.relative(path.dirname(filePath), compiledPath));
+      return `${quote}${relativePath}${quote}`;
   });
 }
 

@@ -4,6 +4,7 @@
   "#6fj3uym6hq15": "./src/checker/scan.ts",
   "#6qu56edczmq6": "./src/index.ts",
   "#80az46plftad": "./src/checker/keys.ts",
+  "#aiqqoxin3urs": "./src/language.ts",
   "#cpwm44bgpa8w": "./scripts/prepare-dist.mjs",
   "#dtqts236bejn": "./src/types.ts",
   "#e11c6npizd56": "./src/checker/index.ts",

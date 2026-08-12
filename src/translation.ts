@@ -1,3 +1,4 @@
+import { normalizeLanguage } from "./language.js";
 import type {
   I18nBundle,
   I18nDictionary,
@@ -12,8 +13,8 @@ function defineMessages<TMessages extends I18nDictionary>(messages: TMessages): 
   return messages;
 }
 
-function translate<TMessages extends I18nDictionary = I18nDictionary>(
-  bundle: I18nBundle<string, TMessages> | undefined,
+function translate<TMessages extends I18nDictionary=I18nDictionary>(
+  bundle: I18nBundle<string, TMessages>|undefined,
   language: string | null | undefined,
   key: string,
   variables: I18nVariables = {},
@@ -21,16 +22,16 @@ function translate<TMessages extends I18nDictionary = I18nDictionary>(
 ): string {
   const fallbackLanguage = normalizeLanguage(options.fallbackLanguage) || DEFAULT_FALLBACK_LANGUAGE;
   const template = lookupLocalizedTemplate({
-    bundle,
-    fallbackLanguage,
-    key,
-    language,
+      bundle,
+      fallbackLanguage,
+      key,
+      language,
   });
 
   return interpolateMessage(template || key, variables);
 }
 
-function createTranslator<TMessages extends I18nDictionary = I18nDictionary>(
+function createTranslator<TMessages extends I18nDictionary=I18nDictionary>(
   bundle: I18nBundle<string, TMessages>,
   language: string | null | undefined,
   options: I18nTranslateOptions = {},
@@ -48,10 +49,10 @@ function createLocalTranslator(
 }
 
 function lookupLocalizedTemplate<TMessages extends I18nDictionary>(args: {
-  bundle: I18nBundle<string, TMessages> | undefined;
-  fallbackLanguage: string;
-  key: string;
-  language: string | null | undefined;
+    bundle: I18nBundle<string, TMessages>|undefined;
+    fallbackLanguage: string;
+    key: string;
+    language: string | null | undefined;
 }): string {
   if (!args.bundle) return "";
 
@@ -95,8 +96,8 @@ function lookupDictionaryValue(dictionary: I18nDictionary | undefined, key: stri
 
 function interpolateMessage(template: string, variables: I18nVariables): string {
   return template.replace(/\{\{\s*([A-Za-z0-9_.-]+)\s*\}\}|\{([A-Za-z0-9_.-]+)\}/gu, (match, doubleKey, singleKey) => {
-    const value = lookupVariable(variables, doubleKey || singleKey);
-    return value == null ? match : String(value);
+      const value = lookupVariable(variables, doubleKey || singleKey);
+      return value == null ? match : String(value);
   });
 }
 
@@ -109,10 +110,6 @@ function lookupVariable(variables: I18nVariables, key: string): unknown {
   }
 
   return current;
-}
-
-function normalizeLanguage(value: string | null | undefined): string {
-  return typeof value === "string" ? value.trim().toLowerCase().replace(/_/gu, "-") : "";
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {
