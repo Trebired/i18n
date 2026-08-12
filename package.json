@@ -1,6 +1,6 @@
 {
   "name": "@trebired/i18n",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "description": "Generic colocated TypeScript i18n primitives and checker for Trebired packages and applications.",
   "type": "module",
   "private": false,
@@ -49,7 +49,8 @@
     "typescript": "^6.0.3"
   },
   "devDependencies": {
-    "@trebired/code-discipline": "^5.5.2",
+    "@trebired/code-discipline": "^6.0.9",
+    "@trebired/code-discipline-config": "^0.1.3",
     "@types/bun": "^1.3.14",
     "@types/node": "^24.13.3"
   },
