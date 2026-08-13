@@ -4,6 +4,11 @@ All notable changes to `@trebired/i18n` will be documented here.
 
 This project follows semantic versioning once published.
 
+## 0.4.7
+
+- Added `.trebired/i18n/config.ts` loading and normalization helpers through `@trebired/i18n/config`.
+- Updated the CLI to consume project i18n config while still allowing explicit CLI options to override it.
+
 ## 0.4.6
 
 - Adopted the external `@trebired/code-discipline-config` preset and updated Code Discipline tooling to `@trebired/code-discipline@^6.0.9`.

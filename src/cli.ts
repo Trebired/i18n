@@ -5,6 +5,10 @@ import {
   formatI18nCheckViolations,
 } from "./checker/index.js";
 import type { I18nCheckOptions } from "./checker/index.js";
+import {
+  createCheckOptionsFromConfig,
+  loadConfig,
+} from "./config/index.js";
 
 type ParsedCli = {
   command: string;
@@ -22,13 +26,17 @@ async function runCli(argv = process.argv.slice(2)): Promise<void> {
     return;
   }
 
-  const result = await checkColocatedI18n(parsed.options);
+  const loadedConfig = await loadConfig(process.cwd());
+  const result = await checkColocatedI18n(
+    createCheckOptionsFromConfig(loadedConfig.config, parsed.options),
+  );
   if (result.ok) {
     console.log(`I18n check passed. folders=${result.checkedFolders}`);
     return;
   }
 
   console.error(formatI18nCheckViolations(result.violations, result.rootDir));
+  if (loadedConfig.config.check.strict === false) return;
   process.exitCode = 1;
 }
 

@@ -10,6 +10,7 @@ const organizationCodes = [116, 114, 101, 98, 105, 114, 101, 100];
 const packageImport = `@${packageOrganization()}/i18n`;
 const runtime = await import(packageImport);
 const checker = await import(`${packageImport}/checker`);
+const configApi = await import(`${packageImport}/config`);
 const {
   createTranslator,
   defineMessages,
@@ -20,17 +21,61 @@ const {
   flattenMessageKeys,
   parseMessagesSource,
 } = checker;
+const {
+  createCheckOptionsFromConfig,
+  loadConfig,
+  normalizeConfig,
+} = configApi;
 
 async function main() {
   await resetTempRoot();
   await verifyRuntimeEntryIsBrowserSafe();
   verifyRootRuntimeExports();
   verifyTranslationRuntime();
+  await verifyConfigApi();
   verifyMessagesParser();
   await verifyCheckerSuccess();
   await verifyCheckerFailures();
   await verifyBuiltCliExecutable();
   console.log("I18n verification succeeded.");
+}
+
+async function verifyConfigApi() {
+  const normalized = normalizeConfig({
+      check: { ignoreDirs: ["generated"] },
+      defaultLanguage: "cs-CZ",
+      local: { dirName: "translations", extensions: "tsx" },
+      supportedLanguages: ["en", "cs"],
+  });
+
+  assert.equal(normalized.defaultLanguage, "cs-cz");
+  assert.equal(normalized.fallbackLanguage, "cs-cz");
+  assert.equal(normalized.local.dirName, "translations");
+  assert.deepEqual(normalized.local.extensions, [".tsx"]);
+  assert.deepEqual(normalized.supportedLanguages, ["cs-cz", "en", "cs"]);
+
+  const options = createCheckOptionsFromConfig(normalized, { ignoreDirs: ["cache"] });
+  assert.equal(options.defaultLanguage, "cs-cz");
+  assert.equal(options.dirName, "translations");
+  assert.deepEqual(options.extensions, [".tsx"]);
+  assert.deepEqual(options.ignoreDirs, ["generated", "cache"]);
+
+  const projectDir = path.join(tempRoot, "config-project");
+  await fs.mkdir(path.join(projectDir, ".trebired", "i18n"), { recursive: true });
+  await fs.writeFile(path.join(projectDir, ".trebired", "i18n", "config.ts"), [
+      "export default {",
+      "  defaultLanguage: 'en',",
+      "  supportedLanguages: ['en', 'cs'],",
+      "  local: { dirName: 'messages', extensions: ['ts'] },",
+      "};",
+      "",
+    ].join("\n"));
+
+  const loaded = await loadConfig(projectDir);
+  assert.equal(loaded.config.local.dirName, "messages");
+  assert.deepEqual(loaded.config.local.extensions, [".ts"]);
+  assert.deepEqual(loaded.config.supportedLanguages, ["en", "cs"]);
+  assert.equal(loaded.dependencies.length, 1);
 }
 
 async function verifyRuntimeEntryIsBrowserSafe() {
