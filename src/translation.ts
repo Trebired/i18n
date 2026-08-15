@@ -1,3 +1,4 @@
+import { isRecord as isObject } from "@trebired/utils";
 import { normalizeLanguage } from "./language.js";
 import type {
   I18nBundle,
@@ -110,10 +111,6 @@ function lookupVariable(variables: I18nVariables, key: string): unknown {
   }
 
   return current;
-}
-
-function isObject(value: unknown): value is Record<string, unknown> {
-  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
 function hasOwn(value: object, key: string): boolean {

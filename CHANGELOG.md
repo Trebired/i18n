@@ -4,6 +4,10 @@ All notable changes to `@trebired/i18n` will be documented here.
 
 This project follows semantic versioning once published.
 
+## 0.5.0
+
+- Added generic language tag normalization, supported-language matching, preferred-language header parsing, and document language helpers to the root runtime API.
+
 ## 0.4.10
 
 - Updated the shared Trebired config dependency to `@trebired/configs@^0.1.2`.

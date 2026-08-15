@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const tempRoot = path.join(rootDir, ".tmp", "verify-i18n");
+const packageVersion = JSON.parse(await fs.readFile(path.join(rootDir, "package.json"), "utf8")).version;
 const organizationCodes = [116, 114, 101, 98, 105, 114, 101, 100];
 const packageImport = `@${packageOrganization()}/i18n`;
 const runtime = await import(packageImport);
@@ -14,6 +15,9 @@ const configApi = await import(`${packageImport}/config`);
 const {
   createTranslator,
   defineMessages,
+  matchSupportedLanguage,
+  pickSupportedLanguage,
+  readPreferredLanguageHeader,
   translate,
 } = runtime;
 const {
@@ -32,6 +36,7 @@ async function main() {
   await verifyRuntimeEntryIsBrowserSafe();
   verifyRootRuntimeExports();
   verifyTranslationRuntime();
+  verifyLanguageRuntime();
   await verifyConfigApi();
   verifyMessagesParser();
   await verifyCheckerSuccess();
@@ -45,6 +50,7 @@ async function verifyConfigApi() {
       check: { ignoreDirs: ["generated"] },
       defaultLanguage: "cs-CZ",
       local: { dirName: "translations", extensions: "tsx" },
+      forVersion: packageVersion,
       supportedLanguages: ["en", "cs"],
   });
 
@@ -64,6 +70,7 @@ async function verifyConfigApi() {
   await fs.mkdir(path.join(projectDir, ".trebired", "i18n"), { recursive: true });
   await fs.writeFile(path.join(projectDir, ".trebired", "i18n", "config.ts"), [
       "export default {",
+      `  forVersion: '${packageVersion}',`,
       "  defaultLanguage: 'en',",
       "  supportedLanguages: ['en', 'cs'],",
       "  local: { dirName: 'messages', extensions: ['ts'] },",
@@ -126,6 +133,14 @@ function verifyTranslationRuntime() {
 
   const translator = createTranslator(bundle, "en");
   assert.equal(translator("nested.title", { name: "Ada" }), "Title Ada");
+}
+
+function verifyLanguageRuntime() {
+  const languages = ["en", "cs"];
+  assert.equal(matchSupportedLanguage("cs-CZ", languages), "cs");
+  assert.equal(matchSupportedLanguage("fr", languages), "");
+  assert.equal(pickSupportedLanguage(["", "en-US"], languages), "en");
+  assert.equal(readPreferredLanguageHeader("fr;q=1, cs;q=0.8, en;q=0.7", languages), "cs");
 }
 
 function verifyMessagesParser() {

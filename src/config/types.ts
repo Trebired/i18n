@@ -16,6 +16,7 @@ type I18nConfig = {
   check?: I18nCheckerConfig;
   defaultLanguage?: string;
   fallbackLanguage?: string;
+  forVersion?: string;
   local?: I18nLocalConfig;
   supportedLanguages?: readonly string[];
 };
@@ -36,6 +37,7 @@ type NormalizedI18nConfig = {
   check: NormalizedI18nCheckerConfig;
   defaultLanguage: string;
   fallbackLanguage: string;
+  forVersion: string;
   local: NormalizedI18nLocalConfig;
   supportedLanguages?: string[];
 };

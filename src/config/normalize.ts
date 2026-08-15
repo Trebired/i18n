@@ -4,6 +4,17 @@ import type {
   I18nConfig,
   NormalizedI18nConfig,
 } from "./types.js";
+import { PACKAGE_VERSION } from "#tcb5kabvu7wf";
+import {
+  toTrimmedString,
+  uniqueStrings,
+} from "@trebired/utils";
+import { resolveForVersion } from "@trebired/utils";
+
+type NormalizeOptions = {
+  configPath?: string;
+  requireForVersion?: boolean;
+};
 
 const DEFAULT_I18N_DIR_NAME = "i18n";
 const DEFAULT_I18N_EXTENSION = ".ts";
@@ -13,7 +24,10 @@ function defineConfig<TConfig extends I18nConfig>(config: TConfig): TConfig {
   return config;
 }
 
-function normalizeConfig(config: I18nConfig = {}): NormalizedI18nConfig {
+function normalizeConfig(
+  config: I18nConfig = {},
+  options: NormalizeOptions = {},
+): NormalizedI18nConfig {
   const fallbackLanguage = normalizeLanguage(
     config.fallbackLanguage || config.defaultLanguage || DEFAULT_I18N_FALLBACK_LANGUAGE,
   );
@@ -28,6 +42,7 @@ function normalizeConfig(config: I18nConfig = {}): NormalizedI18nConfig {
     },
     defaultLanguage,
     fallbackLanguage,
+    forVersion: normalizeForVersion(config, options),
     local: {
       dirName: normalizeOptionalString(config.local?.dirName) || DEFAULT_I18N_DIR_NAME,
       extensions: normalizeExtensions(config.local?.extensions),
@@ -67,8 +82,21 @@ function normalizeSupportedLanguages(
   return languages.includes(defaultLanguage) ? languages : [defaultLanguage, ...languages];
 }
 
+function normalizeForVersion(
+  config: I18nConfig,
+  options: NormalizeOptions,
+): string {
+  return resolveForVersion({
+      configPath: options.configPath,
+      forVersion: config.forVersion,
+      label: "i18n",
+      packageVersion: PACKAGE_VERSION,
+      requireForVersion: options.requireForVersion,
+  });
+}
+
 function normalizeStringList(value: readonly string[] | undefined): string[] {
-  return Array.from(new Set((value || []).map(normalizeOptionalString).filter(Boolean)));
+  return uniqueStrings(value || []);
 }
 
 function mergeLists(
@@ -80,7 +108,7 @@ function mergeLists(
 }
 
 function normalizeOptionalString(value: unknown): string {
-  return typeof value === "string" ? value.trim() : "";
+  return toTrimmedString(value);
 }
 
 export {

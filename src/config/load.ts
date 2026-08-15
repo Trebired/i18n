@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
+import { PACKAGE_VERSION } from "#tcb5kabvu7wf";
 import type {
   I18nConfig,
   LoadI18nConfigOptions,
@@ -23,7 +24,14 @@ async function loadConfig(
 
   if (!configPath) {
     if (options.defaultIfMissing === false) throw new Error("i18n config was not found");
-    return { config: normalizeConfig({}), configPath: null, dependencies: [] };
+    return {
+      config: normalizeConfig(
+        { forVersion: PACKAGE_VERSION },
+        { requireForVersion: false },
+      ),
+      configPath: null,
+      dependencies: [],
+    };
   }
 
   if (!await pathExists(configPath)) {
@@ -32,7 +40,10 @@ async function loadConfig(
 
   const imported = await import(pathToFileURL(configPath).href);
   return {
-    config: normalizeConfig(readDefaultConfig(imported, configPath)),
+    config: normalizeConfig(
+      readDefaultConfig(imported, configPath),
+      { configPath, requireForVersion: true },
+    ),
     configPath,
     dependencies: [configPath],
   };
