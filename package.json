@@ -1,6 +1,6 @@
 {
   "name": "@trebired/i18n",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Generic colocated TypeScript i18n primitives and checker for Trebired packages and applications.",
   "type": "module",
   "private": false,
@@ -51,7 +51,7 @@
     "verify:pack": "bun ./scripts/verify/pack.mjs"
   },
   "dependencies": {
-    "@trebired/utils": "^0.4.0",
+    "@trebired/utils": "^0.4.3",
     "typescript": "^6.0.3"
   },
   "devDependencies": {

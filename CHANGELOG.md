@@ -4,6 +4,11 @@ All notable changes to `@trebired/i18n` will be documented here.
 
 This project follows semantic versioning once published.
 
+## 0.5.1
+
+- Updated shared utilities to `@trebired/utils@^0.4.3`.
+- Moved package version metadata resolution onto the shared package identity helper.
+
 ## 0.5.0
 
 - Added generic language tag normalization, supported-language matching, preferred-language header parsing, and document language helpers to the root runtime API.
