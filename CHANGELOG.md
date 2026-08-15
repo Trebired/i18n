@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2
+
+- Updated shared utilities to `@trebired/utils@^0.4.4`.
+
 All notable changes to `@trebired/i18n` will be documented here.
 
 This project follows semantic versioning once published.
