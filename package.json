@@ -5,13 +5,10 @@
       "displayName": "Trebired",
       "name": "trebired",
       "website": "https://trebired.com"
-    },
-    "creator": {
-      "name": "Miroslav Machynka"
     }
   },
   "name": "@trebired/i18n",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Generic colocated TypeScript i18n primitives and checker for Trebired packages and applications.",
   "type": "module",
   "private": false,
@@ -56,7 +53,7 @@
     "verify:pack": "bun ./scripts/verify/pack.mjs"
   },
   "dependencies": {
-    "@trebired/utils": "^0.4.5",
+    "@trebired/utils": "^0.6.0",
     "typescript": "^6.0.3"
   },
   "devDependencies": {

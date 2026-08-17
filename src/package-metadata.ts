@@ -1,10 +1,6 @@
-import { readPackageIdentity } from "@trebired/utils";
+import { readPackageJsonUrl, toTrimmedString } from "@trebired/utils";
 
-const packageIdentity = readPackageIdentity({
-    fallbackSlug: "i18n",
-    fallbackVersion: "0.5.1",
-    packageJsonUrl: new URL("../package.json", import.meta.url),
-});
-const PACKAGE_VERSION = packageIdentity.version;
+const packageJson = readPackageJsonUrl(new URL("../package.json", import.meta.url));
+const PACKAGE_VERSION = toTrimmedString(packageJson?.version, "0.5.1");
 
 export { PACKAGE_VERSION };

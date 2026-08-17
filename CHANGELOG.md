@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.5
+
+- Removed dead `config.creator` from `package.json`.
+- Updated shared utilities to `@trebired/utils@^0.6.0` and replaced the removed `readPackageIdentity()` with `readPackageJsonUrl()`. No change to `PACKAGE_VERSION` behavior.
+
 ## 0.5.2
 
 - Updated shared utilities to `@trebired/utils@^0.4.4`.
