@@ -87,6 +87,7 @@ function normalizeForVersion(
   options: NormalizeOptions,
 ): string {
   return resolveForVersion({
+      config,
       configPath: options.configPath,
       forVersion: config.forVersion,
       label: "i18n",
