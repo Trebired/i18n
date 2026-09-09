@@ -47,10 +47,10 @@ async function main() {
 
 async function verifyConfigApi() {
   const normalized = normalizeConfig({
+      forVersion: packageVersion,
       check: { ignoreDirs: ["generated"] },
       defaultLanguage: "cs-CZ",
       local: { dirName: "translations", extensions: "tsx" },
-      forVersion: packageVersion,
       supportedLanguages: ["en", "cs"],
   });
 
