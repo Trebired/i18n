@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.2
+
+- Updated the `@trebired/grammar` dependency to `^0.2.0`, which adds the `prep` pipe: `{{ table | prep:z }}` prints "z tabulky" or "ze sessions" in Czech. The checker reads the pipe list from grammar, so it accepts `prep` and no longer reports it as `i18n-unknown-pipe`.
+
 ## 0.7.1
 
 - Changed the CLI to print through `@trebired/logger-adapter` instead of `console`, and added the `@trebired/logger-adapter` dependency. The check result, violations and help text now reach the application's logger when one is installed.

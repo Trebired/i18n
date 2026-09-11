@@ -8,7 +8,7 @@
     }
   },
   "name": "@trebired/i18n",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "Generic colocated TypeScript i18n primitives and checker for Trebired packages and applications.",
   "type": "module",
   "private": false,
@@ -54,7 +54,7 @@
   },
   "dependencies": {
     "@package/logger-adapter": "npm:@trebired/logger-adapter@^0.5.1",
-    "@trebired/grammar": "^0.1.0",
+    "@trebired/grammar": "^0.2.0",
     "@trebired/utils": "^0.9.3",
     "typescript": "^6.0.3"
   },

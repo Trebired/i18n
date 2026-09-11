@@ -6,7 +6,7 @@
       "name": "@trebired/i18n",
       "dependencies": {
         "@package/logger-adapter": "npm:@trebired/logger-adapter@^0.5.1",
-        "@trebired/grammar": "^0.1.0",
+        "@trebired/grammar": "^0.2.0",
         "@trebired/utils": "^0.9.3",
         "typescript": "^6.0.3",
       },
@@ -29,7 +29,7 @@
 
     "@trebired/configs": ["@trebired/configs@0.4.0", "", {}, "sha512-y4GhZMVZqip2LcGqFzvm+ebVr0smuC1cYrU8uJvPlz9Lx7Qo4CJGRr9A5G+RYamlGA/WbBXjujw7mDZALBtwjQ=="],
 
-    "@trebired/grammar": ["@trebired/grammar@0.1.0", "", {}, "sha512-5Fhf/eOARjRWGlbI5M14hEqb61ANO6Vk4Mto9rSWyr0sdHhjzNTfY1pPntpMKTTd2620Q8yRtZskDJ+ul4LbjA=="],
+    "@trebired/grammar": ["@trebired/grammar@0.2.0", "", { "dependencies": { "@package/logger-adapter": "npm:@trebired/logger-adapter@^0.5.1", "@trebired/utils": "^0.9.4" } }, "sha512-2jaGpZyzel8gH5pdMiNjPGzUGq63fTLi2acQxitrW0PuYhDeQVRXx70VhRi6Zo75lYFeKzW1SA8nuqtqaHqIuA=="],
 
     "@trebired/utils": ["@trebired/utils@0.9.3", "", {}, "sha512-N++MKBMDbY39FXFaYsRaU3LTGqDDxLoHmVFvZ0aSeMvy82jeqSShnigCbv2/lQQ+wZT5vqkl/NovxUit798+fA=="],
 
@@ -72,5 +72,7 @@
     "@package/result/@package/logger-adapter": ["@trebired/logger-adapter@0.4.19", "", { "dependencies": { "@package/logger": "npm:@trebired/logger@^2.5.32", "@trebired/utils": "^0.8.0" }, "peerDependencies": { "@trebired/logger": "^2.5.32" }, "optionalPeers": ["@trebired/logger"], "bin": { "logger-adapter-bridge": "dist/bridge/server.js" } }, "sha512-zRmPC1bYV8YANugtM7TSMF1CWjqnGxs4XWI8DFF1oCJ4W3Dw4YTgwj4geTeqRuaQtGWaDp8ROZ4zt//NGQJIMQ=="],
 
     "@package/result/@trebired/utils": ["@trebired/utils@0.8.0", "", {}, "sha512-J7KWJsd2inrO1B3rx7O48KIcFFX0+3c+kR/Cxf4BPRpD1ytLXMWLdDJHbuamxYQCXZRK58aofBYR6AZSw9LxSg=="],
+
+    "@trebired/grammar/@trebired/utils": ["@trebired/utils@0.9.5", "", {}, "sha512-9ocIm2nnIBWbBG5Tm7Aa1ESSU0jiZ9FoscIMK2lHnXESaxjtsSeB3QieLNcPLZnijIsaZzejtvGcoCNktN18aQ=="],
   }
 }
