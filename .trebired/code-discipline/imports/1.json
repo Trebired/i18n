@@ -20,5 +20,6 @@
   "#wil8lhq19f5q": "./src/checker/options.ts",
   "#y7c1ligh4tn2": "./src/config/types.ts",
   "#yznjpd3uk30u": "./src/checker/parser.ts",
-  "#z83gee47f6ko": "./src/translation.ts"
+  "#z83gee47f6ko": "./src/translation.ts",
+  "#zm3wwrq9bfqh": "./src/checker/grammar.ts"
 }

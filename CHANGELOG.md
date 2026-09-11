@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.0
+
+- Added message pipes through `@trebired/grammar`: `{{ name | vocative }}`, every other grammatical case, `possessive`, `number`, `ordinal`, `list`, `article`, `upper`, `lower`, and `capitalize`, in both placeholder forms. A pipe runs in the language the message was found in, so a Czech greeting declines the name while the English fallback leaves it alone. Name variables may be objects (`{ full, gender }`) when the caller knows the gender.
+- Added plural messages: a message may be an object of plural categories (`{ one, few, many, other }`), and `translate` picks the form for the `count` variable using the rules of the language the message was found in. `I18nMessageKey` treats a plural object as one key, and `I18nPluralMessage` and `I18nPluralCategory` are exported.
+- Added two checker violations: `i18n-plural-categories` when a plural message lacks a category its language needs (Czech needs `one`, `few`, `many` and `other`; English `one` and `other`), and `i18n-unknown-pipe` for a pipe `@trebired/grammar` does not provide. Plural messages count as one key when languages are compared.
+- Added the `@trebired/grammar` dependency.
+- Kept placeholders without pipes byte-identical to 0.6: `{{count}}` still prints the raw value.
+
 ## 0.6.1
 
 - Changed the `forVersion` check to pass the config object to `resolveForVersion()`, which `@trebired/utils` 0.9.0 requires. A config that does not declare `forVersion` as its first key now fails instead of loading.

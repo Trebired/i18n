@@ -5,6 +5,7 @@
     "": {
       "name": "@trebired/i18n",
       "dependencies": {
+        "@trebired/grammar": "^0.1.0",
         "@trebired/utils": "^0.9.3",
         "typescript": "^6.0.3",
       },
@@ -26,6 +27,8 @@
     "@trebired/code-discipline": ["@trebired/code-discipline@7.2.0", "", { "dependencies": { "@package/logger": "npm:@trebired/logger@^2.7.0", "@package/result": "npm:@trebired/result@^1.2.8", "@trebired/utils": "^0.9.3", "typescript": "^6.0.3" }, "bin": { "code-discipline": "dist/cli.js" } }, "sha512-/CWVWimPrf7Gq+A9RZWxCb/BFk/PJxRfbb2v+iQYYdWtCTYcWvXM2Pql/mXdBS3cxB8W/tOS6R7sgGbscNtSbg=="],
 
     "@trebired/configs": ["@trebired/configs@0.4.0", "", {}, "sha512-y4GhZMVZqip2LcGqFzvm+ebVr0smuC1cYrU8uJvPlz9Lx7Qo4CJGRr9A5G+RYamlGA/WbBXjujw7mDZALBtwjQ=="],
+
+    "@trebired/grammar": ["@trebired/grammar@0.1.0", "", {}, "sha512-5Fhf/eOARjRWGlbI5M14hEqb61ANO6Vk4Mto9rSWyr0sdHhjzNTfY1pPntpMKTTd2620Q8yRtZskDJ+ul4LbjA=="],
 
     "@trebired/utils": ["@trebired/utils@0.9.3", "", {}, "sha512-N++MKBMDbY39FXFaYsRaU3LTGqDDxLoHmVFvZ0aSeMvy82jeqSShnigCbv2/lQQ+wZT5vqkl/NovxUit798+fA=="],
 

@@ -1,14 +1,23 @@
+import { applyGrammarPipe, isPluralForms, selectPlural } from "@trebired/grammar";
 import { isRecord as isObject } from "@trebired/utils";
 import { normalizeLanguage } from "./language.js";
 import type {
   I18nBundle,
   I18nDictionary,
+  I18nPluralMessage,
   I18nTranslateOptions,
   I18nTranslator,
   I18nVariables,
 } from "./types.js";
 
 const DEFAULT_FALLBACK_LANGUAGE = "en";
+const PLACEHOLDER_PATTERN =
+/\{\{\s*([A-Za-z0-9_.-]+)((?:\s*\|\s*[A-Za-z]+(?::[^|}\s]+)*)*)\s*\}\}|\{([A-Za-z0-9_.-]+)((?:\|[A-Za-z]+(?::[^|}]+)*)*)\}/gu;
+
+type LocalizedMessage = {
+  language: string;
+  message: string | I18nPluralMessage | "";
+};
 
 function defineMessages<TMessages extends I18nDictionary>(messages: TMessages): TMessages {
   return messages;
@@ -22,14 +31,17 @@ function translate<TMessages extends I18nDictionary=I18nDictionary>(
   options: I18nTranslateOptions = {},
 ): string {
   const fallbackLanguage = normalizeLanguage(options.fallbackLanguage) || DEFAULT_FALLBACK_LANGUAGE;
-  const template = lookupLocalizedTemplate({
+  const found = lookupLocalizedMessage({
       bundle,
       fallbackLanguage,
       key,
       language,
   });
+  const template = typeof found.message === "string"
+  ? found.message
+  : selectPlural(variables.count, found.message, found.language);
 
-  return interpolateMessage(template || key, variables);
+  return interpolateMessage(template || key, variables, found.language || language);
 }
 
 function createTranslator<TMessages extends I18nDictionary=I18nDictionary>(
@@ -49,20 +61,20 @@ function createLocalTranslator(
   throw new Error(`i18n-local-translator-unbound :: ${source}`);
 }
 
-function lookupLocalizedTemplate<TMessages extends I18nDictionary>(args: {
+function lookupLocalizedMessage<TMessages extends I18nDictionary>(args: {
     bundle: I18nBundle<string, TMessages>|undefined;
     fallbackLanguage: string;
     key: string;
     language: string | null | undefined;
-}): string {
-  if (!args.bundle) return "";
+}): LocalizedMessage {
+  if (!args.bundle) return { language: "", message: "" };
 
   for (const candidate of languageCandidates(args.language, args.fallbackLanguage)) {
     const value = lookupDictionaryValue(args.bundle[candidate], args.key);
-    if (typeof value === "string") return value;
+    if (typeof value === "string" || isPluralForms(value)) return { language: candidate, message: value };
   }
 
-  return "";
+  return { language: "", message: "" };
 }
 
 function languageCandidates(language: string | null | undefined, fallbackLanguage: string): string[] {
@@ -95,10 +107,26 @@ function lookupDictionaryValue(dictionary: I18nDictionary | undefined, key: stri
   return current;
 }
 
-function interpolateMessage(template: string, variables: I18nVariables): string {
-  return template.replace(/\{\{\s*([A-Za-z0-9_.-]+)\s*\}\}|\{([A-Za-z0-9_.-]+)\}/gu, (match, doubleKey, singleKey) => {
+function interpolateMessage(template: string, variables: I18nVariables, language?: string | null): string {
+  return template.replace(PLACEHOLDER_PATTERN, (match, doubleKey, doublePipes, singleKey, singlePipes) => {
       const value = lookupVariable(variables, doubleKey || singleKey);
-      return value == null ? match : String(value);
+      if (value == null) return match;
+      const pipes = parsePipes(doublePipes || singlePipes || "");
+      if (!pipes.length) return String(value);
+      return String(pipes.reduce<unknown>((current, pipe) => {
+            return applyGrammarPipe(current, pipe.name, pipe.args, language);
+          }, value));
+  });
+}
+
+function parsePipes(source: string): { args: string[]; name: string }[] {
+  return source
+  .split("|")
+  .map((part) => part.trim())
+  .filter(Boolean)
+  .map((part) => {
+      const [name, ...args] = part.split(":").map((item) => item.trim());
+      return { args, name };
   });
 }
 

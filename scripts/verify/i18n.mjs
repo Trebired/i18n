@@ -36,6 +36,7 @@ async function main() {
   await verifyRuntimeEntryIsBrowserSafe();
   verifyRootRuntimeExports();
   verifyTranslationRuntime();
+  verifyGrammarRuntime();
   verifyLanguageRuntime();
   await verifyConfigApi();
   verifyMessagesParser();
@@ -135,6 +136,32 @@ function verifyTranslationRuntime() {
   assert.equal(translator("nested.title", { name: "Ada" }), "Title Ada");
 }
 
+function verifyGrammarRuntime() {
+  const bundle = {
+    en: defineMessages({
+        files: { one: "{{count}} file", other: "{{count}} files" },
+        greeting: "Hello, {{name}}",
+        total: "{{ count | number }} items",
+    }),
+    cs: defineMessages({
+        files: { few: "{{count}} soubory", many: "{{count}} souboru", one: "{{count}} soubor", other: "{{count}} souborů" },
+        greeting: "Ahoj, {{ name | vocative }}",
+        total: "{{ count | number }} položek",
+    }),
+  };
+
+  assert.equal(translate(bundle, "cs", "greeting", { name: "Miroslav Machynka" }), "Ahoj, Miroslave Machynko");
+  assert.equal(translate(bundle, "en", "greeting", { name: "Miroslav Machynka" }), "Hello, Miroslav Machynka");
+  assert.equal(translate(bundle, "cs", "greeting", { name: { full: "Saša", gender: "f" } }), "Ahoj, Sašo");
+  assert.equal(translate(bundle, "cs", "greeting"), "Ahoj, {{ name | vocative }}");
+  for (const [count, expected] of [[1, "1 soubor"], [2, "2 soubory"], [5, "5 souborů"], [1.5, "1.5 souboru"]]) {
+    assert.equal(translate(bundle, "cs", "files", { count }), expected);
+  }
+  assert.equal(translate(bundle, "en", "files", { count: 1 }), "1 file");
+  assert.equal(translate(bundle, "fr", "files", { count: 2 }), "2 files");
+  assert.equal(translate(bundle, "cs", "total", { count: 1234 }), "1 234 položek");
+}
+
 function verifyLanguageRuntime() {
   const languages = ["en", "cs"];
   assert.equal(matchSupportedLanguage("cs-CZ", languages), "cs");
@@ -171,10 +198,14 @@ function verifyMessagesParser() {
 async function verifyCheckerSuccess() {
   const featureDir = path.join(tempRoot, "success", "feature", "i18n");
   await writeLanguageFile(featureDir, "en", {
+      files: { one: "{{count}} file", other: "{{count}} files" },
+      greeting: "Hello, {{ name }}",
       nested: { title: "Title" },
       "status.saved": "Saved",
   });
   await writeLanguageFile(featureDir, "cs", {
+      files: { few: "{{count}} soubory", many: "{{count}} souboru", one: "{{count}} soubor", other: "{{count}} souborů" },
+      greeting: "Ahoj, {{ name | vocative }}",
       nested: { title: "Titulek" },
       "status.saved": "Ulozeno",
   });
@@ -211,6 +242,18 @@ async function verifyCheckerFailures() {
       await fs.writeFile(path.join(folder, "en.ts"), "export default { title: \"Title\" };\n");
       await writeLanguageFile(folder, "cs", { title: "Titulek" });
     }, "i18n-invalid-default-export");
+
+  await assertCheckerFails("plural", async(dir) => {
+      const folder = path.join(dir, "feature", "i18n");
+      await writeLanguageFile(folder, "en", { files: { one: "{{count}} file", other: "{{count}} files" } });
+      await writeLanguageFile(folder, "cs", { files: { one: "{{count}} soubor", other: "{{count}} souborů" } });
+    }, "i18n-plural-categories");
+
+  await assertCheckerFails("pipe", async(dir) => {
+      const folder = path.join(dir, "feature", "i18n");
+      await writeLanguageFile(folder, "en", { greeting: "Hi {{ name | shout }}" });
+      await writeLanguageFile(folder, "cs", { greeting: "Ahoj {{ name | vocative }}" });
+    }, "i18n-unknown-pipe");
 }
 
 async function assertCheckerFails(name, writeFixture, expectedCode) {

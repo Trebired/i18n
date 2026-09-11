@@ -12,8 +12,20 @@ TMessages extends I18nDictionary = I18nDictionary,
 type I18nSupportedLanguage = string;
 type I18nVariables = Record<string, unknown>;
 
+type I18nPluralCategory = "zero" | "one" | "two" | "few" | "many" | "other";
+
+type I18nPluralMessage = Partial<Record<Exclude<I18nPluralCategory, "other">, string>>& {
+  readonly other: string;
+};
+
+type IsPluralMessage<T> = T extends { other: string }
+? Exclude<keyof T, I18nPluralCategory>extends never ? true : false
+: false;
+
 type I18nMessageKey<TMessages extends I18nDictionary> = {
   [K in keyof TMessages&string]: TMessages[K] extends string
+  ? K
+  : IsPluralMessage<TMessages[K]>extends true
   ? K
   : TMessages[K] extends I18nDictionary
   ? K | `${K}.${I18nMessageKey<TMessages[K]>}`
@@ -35,6 +47,8 @@ export type {
   I18nBundle,
   I18nDictionary,
   I18nMessageKey,
+  I18nPluralCategory,
+  I18nPluralMessage,
   I18nPrimitive,
   I18nSupportedLanguage,
   I18nTranslateOptions,

@@ -84,11 +84,25 @@ There is no local `i18n/index.ts`, JSON file, app-wide registry, or checked-in g
 - missing selected-language keys fall back to English
 - missing keys in all languages return the key string
 - `{name}` and `{{ name }}` interpolation both use the variables object
+- a placeholder may run pipes from `@trebired/grammar`, in the language the message was found in: `{{ name | vocative }}`, `{{ count | number }}`, `{{ items | list }}`
+- a message may be a plural object (`{ one, few, many, other }`); the `count` variable picks the form by that language's plural rules
 
 ```ts
-import { translate } from "@trebired/i18n";
+import { defineMessages, translate } from "@trebired/i18n";
 
-translate(bundle, "cs-CZ", "form.title", { count: 3 });
+const bundle = {
+  en: defineMessages({
+    greeting: "Hello, {{ name }}",
+    files: { one: "{{count}} file", other: "{{count}} files" },
+  }),
+  cs: defineMessages({
+    greeting: "Ahoj, {{ name | vocative }}",
+    files: { one: "{{count}} soubor", few: "{{count}} soubory", many: "{{count}} souboru", other: "{{count}} souborů" },
+  }),
+};
+
+translate(bundle, "cs", "greeting", { name: "Miroslav Machynka" }); // "Ahoj, Miroslave Machynko"
+translate(bundle, "cs", "files", { count: 3 });                      // "3 soubory"
 ```
 
 ### Checker API
@@ -120,7 +134,9 @@ The checker fails when:
 
 - a supported language file is missing from any discovered `i18n/` folder
 - a file in an `i18n/` folder is not one of the supported language files
-- languages do not expose the same flattened keys as English
+- languages do not expose the same flattened keys as English; a plural object counts as one key
+- a plural message lacks a category its language needs (`i18n-plural-categories`)
+- a placeholder uses a pipe `@trebired/grammar` does not provide (`i18n-unknown-pipe`)
 - a language file does not default-export `defineMessages({ ... })`
 - message values are not static strings or nested message objects
 

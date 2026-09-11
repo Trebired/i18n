@@ -5,6 +5,8 @@ type I18nCheckViolationCode =
 |"i18n-invalid-default-export"
 |"i18n-key-mismatch"
 |"i18n-missing-language-file"
+|"i18n-plural-categories"
+|"i18n-unknown-pipe"
 |"i18n-unsupported-language-file";
 
 type I18nCheckViolation = {

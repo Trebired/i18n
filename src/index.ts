@@ -17,6 +17,8 @@ export type {
   I18nBundle,
   I18nDictionary,
   I18nMessageKey,
+  I18nPluralCategory,
+  I18nPluralMessage,
   I18nPrimitive,
   I18nSupportedLanguage,
   I18nTranslateOptions,

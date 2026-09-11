@@ -1,3 +1,4 @@
+import { isPluralForms } from "@trebired/grammar";
 import type { I18nDictionary } from "#dtqts236bejn";
 
 function flattenMessageKeys(messages: I18nDictionary): string[] {
@@ -9,7 +10,7 @@ function flattenMessageKeys(messages: I18nDictionary): string[] {
 function collectMessageKeys(messages: I18nDictionary, prefix: string, keys: Set<string>): void {
   for (const [key, value] of Object.entries(messages)) {
     const nextKey = prefix ? `${prefix}.${key}` : key;
-    if (typeof value === "string") {
+    if (typeof value === "string" || isPluralForms(value)) {
       keys.add(nextKey);
       continue;
     }

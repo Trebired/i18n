@@ -1,6 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import type { I18nDictionary } from "#dtqts236bejn";
+import { collectGrammarIssues } from "./grammar.js";
 import { compareKeySets, flattenMessageKeys } from "./keys.js";
 import { normalizeI18nCheckOptions, normalizeLanguage } from "./options.js";
 import { parseMessagesFile } from "./parser.js";
@@ -16,6 +18,7 @@ type LoadedLanguage = {
   filePath: string;
   keys: string[];
   language: string;
+  messages: I18nDictionary;
 };
 
 async function checkColocatedI18n(options: I18nCheckOptions = {}): Promise<I18nCheckResult> {
@@ -69,7 +72,16 @@ async function checkI18nFolder(
   validateExpectedFiles(folderPath, files, languages, options, violations);
   const loaded = await loadLanguages(folderPath, files, languages, violations);
   validateLanguageKeys(folderPath, loaded, options, violations);
+  validateGrammar(folderPath, loaded, violations);
   return violations;
+}
+
+function validateGrammar(folderPath: string, loaded: LoadedLanguage[], violations: I18nCheckViolation[]): void {
+  for (const item of loaded) {
+    for (const issue of collectGrammarIssues(item.messages, item.language)) {
+      violations.push(createViolation(issue.code, folderPath, item.filePath, issue.message));
+    }
+  }
 }
 
 async function readFolderEntries(
@@ -134,10 +146,12 @@ async function loadLanguages(
     const filePath = files.get(language);
     if (!filePath) continue;
     try {
+      const messages = await parseMessagesFile(filePath);
       loaded.push({
           filePath,
-          keys: flattenMessageKeys(await parseMessagesFile(filePath)),
+          keys: flattenMessageKeys(messages),
           language,
+          messages,
       });
     } catch (error) {
       violations.push(createViolation("i18n-invalid-default-export", folderPath, filePath, formatError(error), getErrorLocation(error)));
