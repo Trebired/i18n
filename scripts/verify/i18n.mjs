@@ -3,6 +3,9 @@ import fs from "node:fs/promises";
 import { builtinModules } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveLogger } from "@package/logger-adapter";
+
+const log = resolveLogger({ source: "@trebired/i18n" });
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const tempRoot = path.join(rootDir, ".tmp", "verify-i18n");
@@ -43,7 +46,7 @@ async function main() {
   await verifyCheckerSuccess();
   await verifyCheckerFailures();
   await verifyBuiltCliExecutable();
-  console.log("I18n verification succeeded.");
+  log.info("verify.i18n", "I18n verification succeeded.");
 }
 
 async function verifyConfigApi() {

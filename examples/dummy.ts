@@ -2,6 +2,9 @@ import {
   createTranslator,
   defineMessages,
 } from "#6qu56edczmq6";
+import { resolveLogger } from "@package/logger-adapter";
+
+const log = resolveLogger({ source: "@trebired/i18n" });
 
 const translator = createTranslator({
     en: defineMessages({
@@ -9,4 +12,4 @@ const translator = createTranslator({
     }),
   }, "en");
 
-console.log(translator("title", { name: "i18n" }));
+log.info("example.dummy", translator("title", { name: "i18n" }));

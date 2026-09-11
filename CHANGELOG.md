@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.1
+
+- Changed the CLI to print through `@trebired/logger-adapter` instead of `console`, and added the `@trebired/logger-adapter` dependency. The check result, violations and help text now reach the application's logger when one is installed.
+- Changed the verification scripts and examples to print through `@trebired/logger-adapter` instead of `console` and `process.stdout`.
+
 ## 0.7.0
 
 - Added message pipes through `@trebired/grammar`: `{{ name | vocative }}`, every other grammatical case, `possessive`, `number`, `ordinal`, `list`, `article`, `upper`, `lower`, and `capitalize`, in both placeholder forms. A pipe runs in the language the message was found in, so a Czech greeting declines the name while the English fallback leaves it alone. Name variables may be objects (`{ full, gender }`) when the caller knows the gender.
