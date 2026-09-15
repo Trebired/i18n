@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.3
+
+- Moved to `@trebired/logger-adapter` 0.6.0, which depends on `@trebired/logger` 3.0.0.
+- Updated the shipped `.trebired/logger/config.ts` `forVersion` to `3.0.0`. The logger checks `forVersion` by major and minor version, so under `@trebired/logger` 3.0 the old `2.7.0` value failed the check and this package's log prefix was dropped.
+
 ## 0.7.2
 
 - Updated the `@trebired/grammar` dependency to `^0.2.0`, which adds the `prep` pipe: `{{ table | prep:z }}` prints "z tabulky" or "ze sessions" in Czech. The checker reads the pipe list from grammar, so it accepts `prep` and no longer reports it as `i18n-unknown-pipe`.
