@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "category": "package",
+  "subcategory": "web",
+  "status": "active",
+  "npm": "@trebired/i18n",
+  "description": {
+    "en": "Colocated translations with a checker, so no language falls behind.",
+    "cs": "Kolokované překlady s kontrolou, aby žádný jazyk nezůstal pozadu."
+  }
+}
