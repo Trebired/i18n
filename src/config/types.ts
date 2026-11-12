@@ -8,8 +8,10 @@ type I18nLocalConfig = {
 type I18nCheckerConfig = {
   dirs?: string | string[];
   ignoreDirs?: string[];
+  keys?: boolean;
   rootDir?: string;
   strict?: boolean;
+  tsconfig?: string;
 };
 
 type I18nConfig = {
@@ -29,8 +31,10 @@ type NormalizedI18nLocalConfig = {
 type NormalizedI18nCheckerConfig = {
   dirs?: string | string[];
   ignoreDirs: string[];
+  keys: boolean;
   rootDir?: string;
   strict: boolean;
+  tsconfig?: string;
 };
 
 type NormalizedI18nConfig = {

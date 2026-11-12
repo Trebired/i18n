@@ -37,8 +37,10 @@ function normalizeConfig(
     check: {
       dirs: config.check?.dirs,
       ignoreDirs: normalizeStringList(config.check?.ignoreDirs),
+      keys: config.check?.keys !== false,
       rootDir: normalizeOptionalString(config.check?.rootDir),
       strict: config.check?.strict !== false,
+      tsconfig: normalizeOptionalString(config.check?.tsconfig),
     },
     defaultLanguage,
     fallbackLanguage,
@@ -62,8 +64,10 @@ function createCheckOptionsFromConfig(
     dirs: overrides.dirs || config.check.dirs,
     extensions: overrides.extensions || config.local.extensions,
     ignoreDirs: mergeLists(config.check.ignoreDirs, overrides.ignoreDirs),
+    keys: overrides.keys ?? config.check.keys,
     rootDir,
     supportedLanguages: overrides.supportedLanguages || config.supportedLanguages,
+    tsconfig: overrides.tsconfig || config.check.tsconfig,
   };
 }
 

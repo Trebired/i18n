@@ -6,7 +6,7 @@ import type { I18nCheckOptions, NormalizedI18nCheckOptions } from "./types.js";
 const DEFAULT_DIR_NAME = "i18n";
 const DEFAULT_EXTENSION = ".ts";
 const DEFAULT_FALLBACK_LANGUAGE = "en";
-const DEFAULT_IGNORE_DIRS = [".git", ".tmp", "coverage", "dist", "node_modules"];
+const DEFAULT_IGNORE_DIRS = [".git", ".tmp", ".trebired", "coverage", "dist", "node_modules"];
 
 function normalizeI18nCheckOptions(options: I18nCheckOptions = {}): NormalizedI18nCheckOptions {
   const rootDir = path.resolve(String(options.rootDir || "").trim() || process.cwd());
@@ -20,8 +20,10 @@ function normalizeI18nCheckOptions(options: I18nCheckOptions = {}): NormalizedI1
     dirs: normalizeDirs(options.dirs, rootDir),
     extensions,
     ignoreDirs: new Set([...DEFAULT_IGNORE_DIRS, ...(options.ignoreDirs || [])].map((value) => path.basename(value))),
+    keys: options.keys === true,
     rootDir,
     supportedLanguages,
+    tsconfig: String(options.tsconfig || "").trim() || undefined,
   };
 }
 

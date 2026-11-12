@@ -7,6 +7,7 @@ import { compareKeySets, flattenMessageKeys } from "./keys.js";
 import { normalizeI18nCheckOptions, normalizeLanguage } from "./options.js";
 import { parseMessagesFile } from "./parser.js";
 import { findI18nFolders } from "./scan.js";
+import { checkTranslationKeys } from "./usage.js";
 import type {
   I18nCheckOptions,
   I18nCheckResult,
@@ -29,6 +30,7 @@ async function checkColocatedI18n(options: I18nCheckOptions = {}): Promise<I18nC
   for (const folderPath of folders) {
     violations.push(...await checkI18nFolder(folderPath, normalized));
   }
+  if (normalized.keys) violations.push(...await checkTranslationKeys(normalized, normalized.tsconfig));
 
   return {
     checkedFolders: folders.length,

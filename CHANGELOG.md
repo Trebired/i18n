@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.0
+
+- Added the key check (`i18n-unknown-key`). It reports every literal key code asks a translator for that the translator's `i18n/` folder does not define. Translators passed into other functions are followed across files.
+- The checker API runs the key check only with `keys: true`, so per-folder checks during builds stay cheap. A project config runs it for `trebired-i18n check` unless `check.keys` is `false`. `check.tsconfig` names the TypeScript config to read.
+- `.trebired` folders are no longer taken for message folders.
+
 ## 0.7.4
 
 - Raised the dependency ranges to the current releases: `@trebired/grammar` to `^0.2.1`, `@trebired/logger-adapter` to `^0.8.2`, `@trebired/utils` to `^0.9.7`.

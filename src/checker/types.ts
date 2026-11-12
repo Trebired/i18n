@@ -6,6 +6,7 @@ type I18nCheckViolationCode =
 |"i18n-key-mismatch"
 |"i18n-missing-language-file"
 |"i18n-plural-categories"
+|"i18n-unknown-key"
 |"i18n-unknown-pipe"
 |"i18n-unsupported-language-file";
 
@@ -25,8 +26,10 @@ type I18nCheckOptions = {
   dirs?: string | string[];
   extensions?: string | string[];
   ignoreDirs?: string[];
+  keys?: boolean;
   rootDir?: string;
   supportedLanguages?: readonly string[];
+  tsconfig?: string;
 };
 
 type I18nCheckResult = {
@@ -42,8 +45,10 @@ type NormalizedI18nCheckOptions = {
   dirs: string[];
   extensions: string[];
   ignoreDirs: Set<string>;
+  keys: boolean;
   rootDir: string;
   supportedLanguages?: string[];
+  tsconfig?: string;
 };
 
 type ParsedI18nLanguageFile = {

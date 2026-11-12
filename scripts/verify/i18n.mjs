@@ -45,6 +45,7 @@ async function main() {
   verifyMessagesParser();
   await verifyCheckerSuccess();
   await verifyCheckerFailures();
+  await verifyKeyUsage();
   await verifyBuiltCliExecutable();
   log.info("verify.i18n", "I18n verification succeeded.");
 }
@@ -257,6 +258,44 @@ async function verifyCheckerFailures() {
       await writeLanguageFile(folder, "en", { greeting: "Hi {{ name | shout }}" });
       await writeLanguageFile(folder, "cs", { greeting: "Ahoj {{ name | vocative }}" });
     }, "i18n-unknown-pipe");
+}
+
+async function verifyKeyUsage() {
+  const dir = path.join(tempRoot, "keys");
+  await fs.mkdir(path.join(dir, "page", "panel"), { recursive: true });
+  await fs.writeFile(path.join(dir, "tsconfig.json"), JSON.stringify({
+        compilerOptions: { module: "esnext", moduleResolution: "bundler", noEmit: true, strict: true, target: "esnext" },
+        include: ["**/*.ts"],
+  }));
+  for (const language of ["en", "cs"]) {
+    await writeLanguageFile(path.join(dir, "page", "i18n"), language, { title: language === "en" ? "Page" : "Stránka" });
+    await writeLanguageFile(path.join(dir, "page", "panel", "i18n"), language, { heading: language === "en" ? "Heading" : "Nadpis" });
+  }
+  await fs.writeFile(path.join(dir, "page", "panel", "view.ts"), [
+      "export function panel(t: (key: string) => string) {",
+      "  return t(\"heading\");",
+      "}",
+      "",
+    ].join("\n"));
+  await fs.writeFile(path.join(dir, "page", "index.ts"), [
+      `import { createLocalTranslator } from ${JSON.stringify(packageImport)};`,
+      "import { panel } from \"./panel/view\";",
+      "",
+      "const t = createLocalTranslator(import.meta.url, \"en\");",
+      "const section = String(Date.now() % 2);",
+      "export const out = [t(\"title\"), panel(t), t(`dynamic.${section}`)];",
+      "",
+    ].join("\n"));
+  const result = await checkColocatedI18n({ keys: true, rootDir: dir, supportedLanguages: ["en", "cs"] });
+  const unknown = result.violations.filter((violation) => violation.code === "i18n-unknown-key");
+  assert.equal(unknown.length, 1, "only the key missing from the translator's own folder is reported");
+  assert.match(unknown[0].filePath, /panel[\\/]view\.ts$/u, "the call that receives another folder's translator is found");
+  assert.match(unknown[0].message, /"heading"/u, "the report names the missing key");
+  const off = await checkColocatedI18n({ rootDir: dir, supportedLanguages: ["en", "cs"] });
+  assert.equal(off.ok, true, "the key check stays off unless asked for, so per-folder checks during builds stay cheap");
+  const projectConfig = normalizeConfig({ forVersion: packageVersion, supportedLanguages: ["en", "cs"] });
+  const fromConfig = createCheckOptionsFromConfig(projectConfig, { rootDir: dir });
+  assert.equal(fromConfig.keys, true, "a project's config turns the key check on");
 }
 
 async function assertCheckerFails(name, writeFixture, expectedCode) {

@@ -139,6 +139,7 @@ The checker fails when:
 - a placeholder uses a pipe `@trebired/grammar` does not provide (`i18n-unknown-pipe`)
 - a language file does not default-export `defineMessages({ ... })`
 - message values are not static strings or nested message objects
+- with `keys: true`, code asks a translator for a literal key its `i18n/` folder does not define (`i18n-unknown-key`), so the page would show the key itself
 
 Accepted message values are string literals, no-substitution template literals, parenthesized static strings, and static string concatenation:
 
@@ -149,6 +150,8 @@ Accepted message values are string literals, no-substitution template literals, 
 Dynamic expressions, identifiers, function calls, member expressions, arrays, template expressions with `${...}`, and variables referenced from messages are rejected.
 
 When `supportedLanguages` is omitted, the checker infers languages from each folder but still requires the English fallback file.
+
+The key check reads the project with the TypeScript compiler, using the nearest `tsconfig.json` or `tsconfig`. A translator made with `createLocalTranslator(import.meta.url, …)` belongs to the `i18n/` folder beside its file. A translator passed as an argument carries that folder into the called function, across files, so a panel that receives its page's translator is checked against the page's messages. Keys built at runtime are not checked. The checker API runs the key check only with `keys: true`, which keeps the per-folder checks a bundler runs during a build cheap. A project's `.trebired/i18n/config.ts` turns it on for `trebired-i18n check` unless `check.keys` is `false`. `.trebired` folders are never taken for message folders.
 
 ## Public API
 
