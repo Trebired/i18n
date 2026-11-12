@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { realpathSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { resolveLogger } from "@package/logger-adapter";
 import {
   checkColocatedI18n,
@@ -100,7 +102,17 @@ function printHelp(): void {
     ].join("\n"));
 }
 
-if (process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/gu, "/"))) {
+function startedAsCli(): boolean {
+  const entry = process.argv[1];
+  if (!entry) return false;
+  try {
+    return realpathSync(entry) === realpathSync(fileURLToPath(import.meta.url));
+  } catch {
+    return false;
+  }
+}
+
+if (startedAsCli()) {
   runCli().catch ((error) => {
       cliLog().error("cli", error instanceof Error ? error.message : String(error));
       process.exitCode = 1;

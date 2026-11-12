@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.1
+
+- Fixed `trebired-i18n` doing nothing when started from `node_modules/.bin`, as a `bun run` script does. The CLI ran only when its own path matched the started path, and the bin is a symlink, so it exited 0 without checking. It now compares real paths.
+
 ## 0.8.0
 
 - Added the key check (`i18n-unknown-key`). It reports every literal key code asks a translator for that the translator's `i18n/` folder does not define. Translators passed into other functions are followed across files.

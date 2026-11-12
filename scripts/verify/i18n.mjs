@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs/promises";
 import { builtinModules } from "node:module";
 import path from "node:path";
@@ -317,6 +318,14 @@ async function resetTempRoot() {
 async function verifyBuiltCliExecutable() {
   const stats = await fs.stat(path.join(rootDir, "dist", "cli.js"));
   assert.notEqual(stats.mode&0o111, 0, "dist/cli.js should be executable");
+  const projectRoot = path.join(tempRoot, "cli-link");
+  await writeLanguageFile(path.join(projectRoot, "src", "i18n"), "en", { title: "Title" });
+  await writeLanguageFile(path.join(projectRoot, "src", "i18n"), "cs", {});
+  const link = path.join(projectRoot, "trebired-i18n");
+  await fs.symlink(path.join(rootDir, "dist", "cli.js"), link);
+  const args = [link, "check", "--root", path.join(projectRoot, "src"), "--languages", "en,cs"];
+  const result = spawnSync(process.execPath, args, { cwd: projectRoot, encoding: "utf8" });
+  assert.equal(result.status, 1, `the CLI started through a bin symlink has to run the check:\n${result.stdout}${result.stderr}`);
 }
 
 function findImportSpecifiers(source) {
